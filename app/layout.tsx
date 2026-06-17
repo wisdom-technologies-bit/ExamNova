@@ -7,6 +7,7 @@ import { ToastProvider } from "@/components/toast-provider"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { HideV0Badge } from "@/components/HideV0Badge"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -31,6 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} bg-background text-foreground`}>
+        <HideV0Badge />
         <ThemeProvider 
           attribute="class" 
           defaultTheme="light" 
