@@ -180,26 +180,47 @@ export function generatePaymentSuccessEmail(
   `
 }
 
-// Generate HTML for contact reply email (used as fallback)
+// Generate HTML for contact reply email with conversation history
 export function generateContactReplyEmail(
   name: string,
   originalMessage: string,
   replySubject: string,
   replyMessage: string,
+  conversationHistory: any[] = [],
+  replyUrl?: string,
 ) {
+  const conversationHtml = conversationHistory
+    .map(
+      (reply: any) => `
+    <div style="background-color: ${reply.sender_type === "admin" ? "#ecfdf5" : "#f3f4f6"}; padding: 12px; border-radius: 4px; margin: 10px 0; border-left: 4px solid ${reply.sender_type === "admin" ? "#22c55e" : "#6b7280"};">
+      <p style="margin: 0 0 5px 0;"><strong>${reply.sender_type === "admin" ? "ExamNova Team" : "You"}:</strong></p>
+      <p style="margin: 0; white-space: pre-wrap;">${reply.message.replace(/\n/g, "<br>")}</p>
+      <p style="margin: 5px 0 0 0; font-size: 12px; color: #6b7280;">${new Date(reply.created_at).toLocaleString()}</p>
+    </div>
+  `,
+    )
+    .join("")
+
   return `
     <!DOCTYPE html>
     <html>
       <head>
         <meta charset="UTF-8" />
         <title>Response to Your Inquiry</title>
+        <style>
+          @media (max-width: 600px) {
+            .container { padding: 10px !important; }
+            .content { padding: 15px !important; }
+            h2 { font-size: 18px !important; }
+          }
+        </style>
       </head>
       <body style="font-family: Arial, sans-serif; background-color: #f3f4f6; color: #111827; margin: 0; padding: 0;">
-        <div style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);">
+        <div class="container" style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);">
           <div style="background-color: #22c55e; color: white; padding: 30px 20px; text-align: center;">
             <h1>ExamNova</h1>
           </div>
-          <div style="padding: 20px;">
+          <div class="content" style="padding: 20px;">
             <h2>${replySubject}</h2>
             <p>Hello ${name},</p>
             <p>Thank you for contacting us. Here is our response to your inquiry:</p>
@@ -208,18 +229,35 @@ export function generateContactReplyEmail(
               ${replyMessage.replace(/\n/g, "<br>")}
             </div>
 
-            <div style="background-color: #f3f4f6; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #22c55e;">
-              <p><strong>Your original message:</strong></p>
-              <p>${originalMessage.replace(/\n/g, "<br>")}</p>
+            ${
+              conversationHistory.length > 0
+                ? `
+            <h3 style="margin-top: 30px; margin-bottom: 10px;">Conversation History</h3>
+            <div style="background-color: #f9fafb; padding: 15px; border-radius: 6px; max-height: 400px; overflow-y: auto;">
+              ${conversationHtml}
             </div>
+            `
+                : ""
+            }
+
+            <div style="background-color: #f3f4f6; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #9ca3af;">
+              <p style="margin: 0 0 5px 0;"><strong>Your original message:</strong></p>
+              <p style="margin: 0; white-space: pre-wrap;">${originalMessage.replace(/\n/g, "<br>")}</p>
+            </div>
+
+            ${
+              replyUrl
+                ? `
+            <div style="text-align: center;">
+              <a href="${replyUrl}" style="display: inline-block; background-color: #22c55e; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin-top: 20px;">Reply to This Message</a>
+            </div>
+            `
+                : ""
+            }
 
             <p style="margin-top: 20px;">
               If you have any further questions, please don't hesitate to contact us again.
             </p>
-
-            <div style="text-align: center;">
-              <a href="https://examnova.vercel.app/contact" style="display: inline-block; background-color: #22c55e; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin-top: 20px;">Contact Us Again</a>
-            </div>
           </div>
           <div style="font-size: 12px; color: #6b7280; text-align: center; padding: 20px;">
             <p>&copy; ${new Date().getFullYear()} ExamNova. All rights reserved.</p>
@@ -228,4 +266,29 @@ export function generateContactReplyEmail(
       </body>
     </html>
   `
+}
+
+// Send contact reply email with conversation history
+export async function sendContactReplyEmail(
+  to: string,
+  name: string,
+  replyMessage: string,
+  replyUrl: string,
+  conversationHistory: any[] = [],
+  originalMessage: string = "",
+) {
+  const htmlContent = generateContactReplyEmail(
+    name,
+    originalMessage,
+    "We Have Responded to Your Inquiry",
+    replyMessage,
+    conversationHistory,
+    replyUrl,
+  )
+
+  return await sendEmail({
+    to,
+    subject: "Response to Your ExamNova Inquiry",
+    htmlContent,
+  })
 }
