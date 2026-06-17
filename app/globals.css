@@ -1,9 +1,13 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --radius: 0.5rem;
+}
 
 @layer base {
   :root {
+    color-scheme: light;
+    
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
@@ -23,10 +27,11 @@
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 142.1 76.2% 36.3%;
-    --radius: 0.5rem;
   }
 
   .dark {
+    color-scheme: dark;
+    
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
     --card: 222.2 84% 4.9%;
@@ -47,11 +52,10 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 142.4 71.8% 29.2%;
   }
-}
 
-@layer base {
   html {
-    color-scheme: light dark;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
@@ -67,25 +71,7 @@
 
 @layer utilities {
   .container {
-    max-width: 80rem;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-  
-  @media (min-width: 640px) {
-    .container {
-      padding-left: 1.5rem;
-      padding-right: 1.5rem;
-    }
-  }
-  
-  @media (min-width: 1024px) {
-    .container {
-      padding-left: 2rem;
-      padding-right: 2rem;
-    }
+    @apply max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12;
   }
 }
 
