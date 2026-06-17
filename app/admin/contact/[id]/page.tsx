@@ -11,8 +11,9 @@ import ReplyForm from "./reply-form"
 // Render on-demand instead of at build time
 export const revalidate = 0
 
-export default async function ContactMessageDetailPage({ params }: { params: { id: string } }) {
-  const messageId = Number.parseInt(params.id)
+export default async function ContactMessageDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const messageId = Number.parseInt(id)
 
   if (isNaN(messageId)) {
     notFound()

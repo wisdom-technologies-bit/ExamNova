@@ -14,8 +14,9 @@ import { sql } from "@/lib/db"
 // Render on-demand instead of at build time
 export const revalidate = 0
 
-export default async function SubcategoryPage({ params }: { params: { id: string } }) {
-  const subcategoryId = Number.parseInt(params.id)
+export default async function SubcategoryPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const subcategoryId = Number.parseInt(id)
 
   if (isNaN(subcategoryId)) {
     notFound()

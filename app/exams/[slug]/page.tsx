@@ -14,8 +14,9 @@ import { notFound } from "next/navigation"
 // Render on-demand instead of at build time
 export const revalidate = 0
 
-export default async function ExamCategoryPage({ params }: { params: { slug: string } }) {
-  const category = await getExamCategoryBySlug(params.slug)
+export default async function ExamCategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const category = await getExamCategoryBySlug(slug)
 
   if (!category) {
     notFound()
