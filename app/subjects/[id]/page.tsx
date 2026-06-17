@@ -10,8 +10,12 @@ import { formatNaira } from "@/lib/utils"
 import { notFound } from "next/navigation"
 import { logger } from "@/lib/logger"
 
-export default async function SubjectPage({ params }: { params: { id: string } }) {
-  const subjectId = Number.parseInt(params.id)
+// Render on-demand instead of at build time
+export const revalidate = 0
+
+export default async function SubjectPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const subjectId = Number.parseInt(id)
 
   if (isNaN(subjectId)) {
     notFound()

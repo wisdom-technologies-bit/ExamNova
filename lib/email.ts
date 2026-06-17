@@ -29,7 +29,7 @@ export async function sendEmail({ to, subject, htmlContent, templateId, params, 
 
     const defaultSender = {
       name: "ExamNova",
-      email: "nova.nova.exams@gmail.com",
+      email: "hello@examnova.name.ng",
     }
 
     // Prepare the request body
@@ -168,7 +168,7 @@ export function generatePaymentSuccessEmail(
             </div>
 
             <p style="margin-top: 30px;">
-              For support, contact us at nova.nova.exams@gmail.com or reply to this email.
+              For support, contact us at hello@examnova.name.ng or reply to this email.
             </p>
           </div>
           <div style="font-size: 12px; color: #6b7280; text-align: center; padding: 20px;">

@@ -11,8 +11,12 @@ import { getSubjectsBySubcategory } from "@/app/actions/subjects"
 import { formatNaira } from "@/lib/utils"
 import { notFound } from "next/navigation"
 
-export default async function ExamCategoryPage({ params }: { params: { slug: string } }) {
-  const category = await getExamCategoryBySlug(params.slug)
+// Render on-demand instead of at build time
+export const revalidate = 0
+
+export default async function ExamCategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const category = await getExamCategoryBySlug(slug)
 
   if (!category) {
     notFound()
