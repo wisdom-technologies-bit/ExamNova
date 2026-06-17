@@ -9,7 +9,7 @@ export async function uploadImage(file: File): Promise<string | null> {
   const formData = new FormData();
   formData.append("file", file);
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"; // fallback in dev
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.examnova.name.ng"
 
   const res = await fetch(`${baseUrl}/api/upload`, {
     method: "POST",

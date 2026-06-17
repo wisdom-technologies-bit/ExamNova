@@ -3,6 +3,7 @@
 import { sql } from "@/lib/db"
 import { revalidatePath } from "next/cache"
 import { generatePIN, getExpirationDate } from "@/lib/db"
+import { logger } from "@/lib/logger"
 
 export async function getFeaturedSubjects(limit = 6) {
   try {
@@ -62,6 +63,8 @@ export async function getSubjectsByCategory(categoryId: number, limit = 15) {
 
 export async function getSubjectById(id: number) {
   try {
+    logger.info(`[SUBJECT] Fetching subject with ID: ${id}`)
+    
     const [subject] = await sql`
       SELECT s.id, s.title, s.price, s.content, s.is_featured, s.image_url, s.created_at,
              sc.name as subcategory_name, c.name as category_name, c.slug as category_slug
@@ -70,9 +73,16 @@ export async function getSubjectById(id: number) {
       JOIN exam_categories c ON sc.category_id = c.id
       WHERE s.id = ${id}
     `
+    
+    if (subject) {
+      logger.info(`[SUBJECT] Subject found: ${subject.title}`)
+    } else {
+      logger.error(`[SUBJECT] Subject with ID ${id} not found in database`)
+    }
+    
     return subject
   } catch (error) {
-    console.error(`Failed to fetch subject with id ${id}:`, error)
+    logger.error(`[SUBJECT] Failed to fetch subject with id ${id}:`, error instanceof Error ? error.message : String(error))
     return null
   }
 }

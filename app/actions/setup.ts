@@ -15,7 +15,7 @@ export async function ensureAdminExists() {
       logger.info("No admin users found, creating default admin")
 
       // Create default admin user
-      const result = await createAdminUser("admin@examnova.com", "admin123")
+      const result = await createAdminUser("admin@examnova.name.ng", "admin123")
 
       if (result.success) {
         logger.info("Default admin user created successfully")

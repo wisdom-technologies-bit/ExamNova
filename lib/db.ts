@@ -8,7 +8,7 @@ export const sql = (() => {
   const connectionString = process.env.DATABASE_URL
 
   if (!connectionString) {
-    console.error("DATABASE_URL environment variable is not set")
+    console.error("[DB] DATABASE_URL environment variable is not set")
     // Return a function that throws a more helpful error when used
     return () => {
       throw new Error("Database connection failed: No DATABASE_URL environment variable provided")
@@ -16,9 +16,12 @@ export const sql = (() => {
   }
 
   try {
-    return neon(connectionString)
+    console.log("[DB] Initializing Neon database connection")
+    const sqlInstance = neon(connectionString)
+    console.log("[DB] Database connection initialized successfully")
+    return sqlInstance
   } catch (error) {
-    console.error("Failed to initialize database connection:", error)
+    console.error("[DB] Failed to initialize database connection:", error)
     // Return a function that throws an error when used
     return () => {
       throw new Error("Database connection failed: " + (error instanceof Error ? error.message : String(error)))
