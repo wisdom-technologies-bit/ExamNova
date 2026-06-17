@@ -1,10 +1,11 @@
 import { Suspense } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, Eye } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { getPostById } from "@/app/actions/posts"
+import { trackPostView, getPostViewCount } from "@/app/actions/post-views"
 import { formatDate } from "@/lib/db"
 import { notFound } from "next/navigation"
 import { logger } from "@/lib/logger"
@@ -40,6 +41,12 @@ async function PostDetail({ postId }: { postId: number }) {
 
   logger.info(`Post found: ${post.title}, has image: ${!!post.image_url}`)
 
+  // Track the view
+  await trackPostView(postId)
+
+  // Get current view count
+  const viewCount = await getPostViewCount(postId)
+
   return (
     <div>
       <Link href="/" className="flex items-center text-green-600 hover:text-green-700 mb-4">
@@ -50,7 +57,13 @@ async function PostDetail({ postId }: { postId: number }) {
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="text-2xl">{post.title}</CardTitle>
-          <p className="text-sm text-muted-foreground">Published on {formatDate(post.created_at)}</p>
+          <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
+            <span>Published on {formatDate(post.created_at)}</span>
+            <div className="flex items-center gap-1">
+              <Eye className="h-4 w-4" />
+              <span>{viewCount} views</span>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           {post.image_url && (
