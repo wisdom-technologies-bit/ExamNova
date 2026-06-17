@@ -11,6 +11,9 @@ import { formatNaira } from "@/lib/utils"
 import { notFound } from "next/navigation"
 import { sql } from "@/lib/db"
 
+// Render on-demand instead of at build time
+export const revalidate = 0
+
 export default async function SubcategoryPage({ params }: { params: { id: string } }) {
   const subcategoryId = Number.parseInt(params.id)
 

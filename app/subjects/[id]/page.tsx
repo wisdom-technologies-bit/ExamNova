@@ -10,6 +10,9 @@ import { formatNaira } from "@/lib/utils"
 import { notFound } from "next/navigation"
 import { logger } from "@/lib/logger"
 
+// Render on-demand instead of at build time
+export const revalidate = 0
+
 export default async function SubjectPage({ params }: { params: { id: string } }) {
   const subjectId = Number.parseInt(params.id)
 
