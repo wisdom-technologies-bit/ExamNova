@@ -1,0 +1,50 @@
+import type React from "react"
+import type { Metadata } from "next"
+import { Inter } from "next/font/google"
+import "./globals.css"
+import { ThemeProvider } from "@/components/theme-provider"
+import { ToastProvider } from "@/components/toast-provider"
+import Header from "@/components/header"
+import Footer from "@/components/footer"
+import { SpeedInsights } from "@vercel/speed-insights/next"
+
+const inter = Inter({ subsets: ["latin"] })
+
+export const metadata: Metadata = {
+  title: "ExamNova",
+  description: "Access WAEC, NECO & NABTEB exam expo instantly",
+  icons: {
+    icon: "https://i.ibb.co/9PgYrBP/20250522-090102.png",
+  },
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+  },
+}
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.className} bg-background text-foreground`}>
+        <ThemeProvider 
+          attribute="class" 
+          defaultTheme="light" 
+          enableSystem={true}
+          disableTransitionOnChange={true}
+        >
+          <div className="flex min-h-screen flex-col bg-background">
+            <Header />
+            <main className="flex-1 bg-background">{children}</main>
+            <Footer />
+          </div>
+          <ToastProvider />
+        </ThemeProvider>
+      </body>
+    </html>
+  )
+}
