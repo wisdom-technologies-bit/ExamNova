@@ -23,7 +23,7 @@ export async function submitContactForm(fullName: string, email: string, message
           <p><strong>Email:</strong> ${email}</p>
           <p><strong>Message:</strong></p>
           <p>${message.replace(/\n/g, "<br>")}</p>
-          <p><a href="${process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000"}/admin/contact">View in Admin Dashboard</a></p>
+          <p><a href="${process.env.NEXT_PUBLIC_APP_URL || "https://www.examnova.name.ng"}/admin/contact">View in Admin Dashboard</a></p>
         </div>
       `,
     })

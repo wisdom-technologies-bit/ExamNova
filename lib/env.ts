@@ -12,7 +12,7 @@ export const env = {
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET || "",
 
   // Application URL
-  APP_URL: process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000",
+  APP_URL: process.env.NEXT_PUBLIC_APP_URL || "https://www.examnova.name.ng",
 }
 
 // Log environment variables status (without revealing sensitive values)
