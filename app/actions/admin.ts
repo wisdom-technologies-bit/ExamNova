@@ -33,7 +33,7 @@ export async function loginAdmin(email: string, password: string) {
     }
 
     // Set a cookie to indicate the admin is logged in
-    cookies().set("admin_session", "true", {
+    (await cookies()).set("admin_session", "true", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       maxAge: 60 * 60 * 24, // 1 day
@@ -50,12 +50,12 @@ export async function loginAdmin(email: string, password: string) {
 
 export async function logoutAdmin() {
   console.log("Admin logout requested")
-  cookies().delete("admin_session")
+  (await cookies()).delete("admin_session")
   redirect("/admin-access")
 }
 
 export async function checkAdminSession() {
-  const session = cookies().get("admin_session")
+  const session = (await cookies()).get("admin_session")
   const hasSession = session?.value === "true"
   console.log("Admin session check:", hasSession)
   return hasSession
