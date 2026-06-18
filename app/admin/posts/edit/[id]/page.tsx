@@ -132,7 +132,14 @@ export default function EditPostPage() {
   }
 
   if (!post) {
-    notFound()
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <p className="text-red-500 font-semibold mb-4">Post not found</p>
+          <Button onClick={() => router.push("/admin/posts")}>Go Back</Button>
+        </div>
+      </div>
+    )
   }
 
   return (

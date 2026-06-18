@@ -3,7 +3,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { Metadata } from "next"
 import { ArrowLeft, Eye } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+
 import { Skeleton } from "@/components/ui/skeleton"
 import { getPostById } from "@/app/actions/posts"
 import { trackPostView, getPostViewCount } from "@/app/actions/post-views"
@@ -103,73 +103,77 @@ async function PostDetail({ postId }: { postId: number }) {
   const viewCount = await getPostViewCount(postId)
 
   return (
-    <div>
-      <Link href="/" className="flex items-center text-green-600 hover:text-green-700 mb-4">
+    <article className="max-w-4xl mx-auto px-4 py-8">
+      <Link href="/posts" className="flex items-center text-green-600 hover:text-green-700 mb-8">
         <ArrowLeft className="mr-2 h-4 w-4" />
-        Back to Home
+        Back to Posts
       </Link>
 
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle className="text-2xl">{post.title}</CardTitle>
-          <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
-            <span>Published on {formatDate(post.created_at)}</span>
-            <div className="flex items-center gap-1">
-              <Eye className="h-4 w-4" />
-              <span>{viewCount} views</span>
-            </div>
+      <header className="mb-8">
+        <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
+        <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+          <time dateTime={post.created_at}>Published on {formatDate(post.created_at)}</time>
+          <div className="flex items-center gap-1">
+            <Eye className="h-4 w-4" />
+            <span>{viewCount} {viewCount === 1 ? "view" : "views"}</span>
           </div>
-        </CardHeader>
-        <CardContent>
-          {post.image_url && (
-            <div className="mb-6">
-              <Image
-                src={post.image_url || "/placeholder.svg"}
-                alt={post.title}
-                width={800}
-                height={400}
-                className="rounded-md object-cover w-full h-64"
-                priority
-                unoptimized
-              />
-            </div>
-          )}
+        </div>
+      </header>
 
-          <div className="prose max-w-none">
-            <div dangerouslySetInnerHTML={{ __html: post.content }} />
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+      {post.image_url && (
+        <figure className="mb-8">
+          <Image
+            src={post.image_url}
+            alt={post.title}
+            width={800}
+            height={400}
+            className="rounded-lg object-cover w-full h-auto shadow-lg"
+            priority
+            unoptimized
+          />
+        </figure>
+      )}
+
+      <div className="prose prose-lg max-w-none prose-img:rounded-lg prose-img:shadow-md prose-a:text-green-600 prose-a:no-underline hover:prose-a:underline prose-h2:text-2xl prose-h3:text-xl prose-h2:mt-8 prose-h2:mb-4 prose-h3:mt-6 prose-h3:mb-3 prose-p:leading-relaxed prose-ul:my-4 prose-ol:my-4">
+        <div dangerouslySetInnerHTML={{ __html: post.content }} />
+      </div>
+
+      <footer className="mt-12 pt-8 border-t">
+        <Link href="/posts" className="inline-flex items-center text-green-600 hover:text-green-700 font-medium">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to All Posts
+        </Link>
+      </footer>
+    </article>
   )
 }
 
 function PostDetailSkeleton() {
   return (
-    <div>
-      <div className="flex items-center mb-4">
+    <article className="max-w-4xl mx-auto px-4 py-8">
+      <div className="flex items-center mb-8">
         <Skeleton className="h-4 w-4 mr-2" />
         <Skeleton className="h-4 w-40" />
       </div>
 
-      <Card>
-        <CardHeader>
-          <Skeleton className="h-8 w-3/4" />
-          <Skeleton className="h-4 w-1/3 mt-2" />
-        </CardHeader>
-        <CardContent>
-          <Skeleton className="h-64 w-full mb-6" />
+      <header className="mb-8">
+        <Skeleton className="h-10 w-3/4 mb-4" />
+        <div className="flex gap-4">
+          <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-4 w-32" />
+        </div>
+      </header>
 
-          <div className="space-y-4">
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-3/4" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-5/6" />
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+      <Skeleton className="h-80 w-full mb-8 rounded-lg" />
+
+      <div className="space-y-4">
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-3/4" />
+        <Skeleton className="h-4 w-full mt-8" />
+        <Skeleton className="h-4 w-5/6" />
+      </div>
+    </article>
   )
 }
