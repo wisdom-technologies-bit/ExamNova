@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useToast } from "@/components/ui/use-toast"
 import { ImageUpload } from "@/components/image-upload"
-import { updatePost } from "@/app/actions/posts"
+import { updatePost, getPostById } from "@/app/actions/posts"
 
 const formSchema = z.object({
   title: z.string().min(3, { message: "Title must be at least 3 characters" }),
@@ -55,13 +55,12 @@ export default function EditPostPage() {
   useEffect(() => {
     async function fetchPost() {
       try {
-        const response = await fetch(`/api/posts/${postId}`)
+        const data = await getPostById(postId)
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch post")
+        if (!data) {
+          throw new Error("Post not found")
         }
 
-        const data = await response.json()
         setPost(data)
 
         // Set form values
@@ -72,7 +71,7 @@ export default function EditPostPage() {
           imageUrl: data.image_url || "",
         })
       } catch (error) {
-        console.error("Failed to fetch post:", error)
+        console.error("[v0] Failed to fetch post:", error)
         toast({
           variant: "destructive",
           title: "Error",
