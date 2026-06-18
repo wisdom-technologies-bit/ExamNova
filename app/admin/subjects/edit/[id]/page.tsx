@@ -218,7 +218,7 @@ export default function EditSubjectPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Subcategory</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value.toString()}>
+                    <Select onValueChange={(value) => field.onChange(Number(value))} value={field.value ? field.value.toString() : ""}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select a subcategory" />
