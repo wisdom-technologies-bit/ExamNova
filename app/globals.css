@@ -1,4 +1,10 @@
 @import "tailwindcss";
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --radius: 0.5rem;
+}
 
 @theme {
   --radius: 0.5rem;
