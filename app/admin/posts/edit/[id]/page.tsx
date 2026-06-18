@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -14,7 +14,6 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { useToast } from "@/components/ui/use-toast"
 import { ImageUpload } from "@/components/image-upload"
 import { updatePost } from "@/app/actions/posts"
-import { notFound } from "next/navigation"
 
 const formSchema = z.object({
   title: z.string().min(3, { message: "Title must be at least 3 characters" }),
@@ -23,14 +22,21 @@ const formSchema = z.object({
   imageUrl: z.string().optional(),
 })
 
-export default function EditPostPage({ params }: { params: { id: string } }) {
-  const postId = Number.parseInt(params.id)
+export default function EditPostPage() {
+  const router = useRouter()
+  const params = useParams()
+  const postId = Number.parseInt(params.id as string)
 
   if (isNaN(postId)) {
-    notFound()
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <p className="text-red-500 font-semibold mb-4">Invalid post ID</p>
+          <Button onClick={() => router.push("/admin/posts")}>Go Back</Button>
+        </div>
+      </div>
+    )
   }
-
-  const router = useRouter()
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
   const [isLoadingPost, setIsLoadingPost] = useState(true)

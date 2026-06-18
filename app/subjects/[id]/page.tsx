@@ -1,6 +1,7 @@
 import { Suspense } from "react"
 import Link from "next/link"
 import Image from "next/image"
+import { Metadata } from "next"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -12,6 +13,61 @@ import { logger } from "@/lib/logger"
 
 // Render on-demand instead of at build time
 export const revalidate = 0
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params
+  const subjectId = Number.parseInt(id)
+
+  if (isNaN(subjectId)) {
+    return {
+      title: "Subject Not Found | ExamNova",
+    }
+  }
+
+  try {
+    const subject = await getSubjectById(subjectId)
+
+    if (!subject) {
+      return {
+        title: "Subject Not Found | ExamNova",
+      }
+    }
+
+    const description = `Study ${subject.title} - ${subject.category_name}. Access comprehensive exam content with ExamNova. Price: ${formatNaira(Number(subject.price))}`
+
+    return {
+      title: `${subject.title} - ${subject.category_name} | ExamNova`,
+      description: description,
+      openGraph: {
+        title: subject.title,
+        description: description,
+        type: "website",
+        url: `https://www.examnova.name.ng/subjects/${subjectId}`,
+        images: subject.image_url
+          ? [
+              {
+                url: subject.image_url,
+                width: 1200,
+                height: 630,
+                alt: subject.title,
+              },
+            ]
+          : [],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: subject.title,
+        description: description,
+        images: subject.image_url ? [subject.image_url] : [],
+      },
+      keywords: [subject.title, subject.category_name, subject.subcategory_name, "exam", "study"],
+    }
+  } catch (error) {
+    return {
+      title: "Subject | ExamNova",
+    }
+  }
+}
 
 export default async function SubjectPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params

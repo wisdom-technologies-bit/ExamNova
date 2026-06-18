@@ -1,6 +1,7 @@
 import { Suspense } from "react"
 import Link from "next/link"
 import Image from "next/image"
+import { Metadata } from "next"
 import { ArrowLeft, Eye } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -12,6 +13,60 @@ import { logger } from "@/lib/logger"
 
 // Render on-demand instead of at build time
 export const revalidate = 0
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params
+  const postId = Number.parseInt(id)
+
+  if (isNaN(postId)) {
+    return {
+      title: "Post Not Found | ExamNova",
+    }
+  }
+
+  try {
+    const post = await getPostById(postId)
+
+    if (!post) {
+      return {
+        title: "Post Not Found | ExamNova",
+      }
+    }
+
+    const description = post.content?.replace(/<[^>]*>/g, "").substring(0, 160) || "Read our latest blog posts on ExamNova"
+
+    return {
+      title: `${post.title} | ExamNova`,
+      description: description,
+      openGraph: {
+        title: post.title,
+        description: description,
+        type: "article",
+        url: `https://www.examnova.name.ng/posts/${postId}`,
+        images: post.image_url
+          ? [
+              {
+                url: post.image_url,
+                width: 1200,
+                height: 630,
+                alt: post.title,
+              },
+            ]
+          : [],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: post.title,
+        description: description,
+        images: post.image_url ? [post.image_url] : [],
+      },
+    }
+  } catch (error) {
+    return {
+      title: "Post | ExamNova",
+    }
+  }
+}
 
 export default async function PostPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
