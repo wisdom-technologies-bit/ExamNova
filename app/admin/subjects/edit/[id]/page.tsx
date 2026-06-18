@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -14,8 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox"
 import { useToast } from "@/components/ui/use-toast"
 import { ImageUpload } from "@/components/image-upload"
-import { updateSubject } from "@/app/actions/subjects"
-import { notFound } from "next/navigation"
+import { updateSubject, getSubjectById } from "@/app/actions/subjects"
 
 const formSchema = z.object({
   title: z.string().min(3, { message: "Title must be at least 3 characters" }),
@@ -26,14 +25,21 @@ const formSchema = z.object({
   imageUrl: z.string().optional(),
 })
 
-export default function EditSubjectPage({ params }: { params: { id: string } }) {
-  const subjectId = Number.parseInt(params.id)
+export default function EditSubjectPage() {
+  const router = useRouter()
+  const params = useParams()
+  const subjectId = Number.parseInt(params.id as string)
 
   if (isNaN(subjectId)) {
-    notFound()
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <p className="text-red-500 font-semibold mb-4">Invalid subject ID</p>
+          <Button onClick={() => router.push("/admin/subjects")}>Go Back</Button>
+        </div>
+      </div>
+    )
   }
-
-  const router = useRouter()
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
   const [isLoadingSubject, setIsLoadingSubject] = useState(true)
@@ -70,13 +76,12 @@ export default function EditSubjectPage({ params }: { params: { id: string } }) 
 
     async function fetchSubject() {
       try {
-        const response = await fetch(`/api/subjects/${subjectId}`)
+        const data = await getSubjectById(subjectId)
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch subject")
+        if (!data) {
+          throw new Error("Subject not found")
         }
 
-        const data = await response.json()
         setSubject(data)
 
         // Set form values
@@ -89,7 +94,7 @@ export default function EditSubjectPage({ params }: { params: { id: string } }) 
           imageUrl: data.image_url || "",
         })
       } catch (error) {
-        console.error("Failed to fetch subject:", error)
+        console.error("[v0] Failed to fetch subject:", error)
         toast({
           variant: "destructive",
           title: "Error",
@@ -152,7 +157,14 @@ export default function EditSubjectPage({ params }: { params: { id: string } }) 
   }
 
   if (!subject) {
-    notFound()
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <p className="text-red-500 font-semibold mb-4">Subject not found</p>
+          <Button onClick={() => router.push("/admin/subjects")}>Go Back</Button>
+        </div>
+      </div>
+    )
   }
 
   return (
