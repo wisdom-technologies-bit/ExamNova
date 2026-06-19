@@ -34,12 +34,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
   <head>
-  <script
-    src="https://quge5.com/88/tag.min.js"
-    data-zone="251309"
-    async
-    data-cfasync="false"
-  ></script>
     <script
   dangerouslySetInnerHTML={{
     __html: `(function(s){s.dataset.zone='11169801',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`,
