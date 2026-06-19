@@ -40,9 +40,11 @@ export default function RootLayout({
     async
     data-cfasync="false"
   ></script>
-    <Script id="monetag-vignette">
-{`(function(s){s.dataset.zone='11169801',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`}
-</Script>
+    <script
+  dangerouslySetInnerHTML={{
+    __html: `(function(s){s.dataset.zone='11169801',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`,
+  }}
+/>
 </head>
 
   <body className={`${inter.className} bg-background text-foreground`}>
