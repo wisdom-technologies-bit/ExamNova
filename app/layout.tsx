@@ -33,7 +33,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} bg-background text-foreground`}>
+  <head>
+    <Script
+      src="https://quge5.com/88/tag.min.js"
+      data-zone="251309"
+      strategy="afterInteractive"
+    />
+  </head>
+
+  <body className={`${inter.className} bg-background text-foreground`}>
         <HideV0Badge />
         <ThemeProvider 
           attribute="class" 
@@ -47,11 +55,6 @@ export default function RootLayout({
             <Footer />
           </div>
           <ToastProvider />
-          <Script
-  src="https://quge5.com/88/tag.min.js"
-  data-zone="251309"
-  strategy="afterInteractive"
-/>
         </ThemeProvider>
       </body>
     </html>
