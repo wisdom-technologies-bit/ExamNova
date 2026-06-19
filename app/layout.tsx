@@ -8,6 +8,7 @@ import Header from "@/components/header"
 import Footer from "@/components/footer"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { HideV0Badge } from "@/components/HideV0Badge"
+import Script from "next/script"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -32,7 +33,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} bg-background text-foreground`}>
+  <head>
+    <script
+  dangerouslySetInnerHTML={{
+    __html: `(function(s){s.dataset.zone='11169801',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`,
+  }}
+/>
+</head>
+
+  <body className={`${inter.className} bg-background text-foreground`}>
         <HideV0Badge />
         <ThemeProvider 
           attribute="class" 
