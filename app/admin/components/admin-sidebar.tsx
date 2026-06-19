@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
-import { BarChart, Book, FileText, Home, Mail, Package, LogOut, Menu } from "lucide-react"
+import { BarChart, Book, FileText, Home, Mail, Package, LogOut, Menu, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { logoutAdmin } from "@/app/actions/admin"
@@ -49,6 +49,12 @@ export default function AdminSidebar() {
       icon: BarChart,
       href: "/admin/payments",
       active: pathname === "/admin/payments",
+    },
+    {
+      label: "Campaign",
+      icon: Send,
+      href: "/admin/campaign",
+      active: pathname === "/admin/campaign",
     },
   ]
 
