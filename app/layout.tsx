@@ -13,8 +13,12 @@ import Script from "next/script"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://examnova.name.ng"),
   title: "ExamNova",
   description: "Access WAEC, NECO & NABTEB exam expo instantly",
+  alternates: {
+    canonical: "/",
+  },
   icons: {
     icon: "https://i.ibb.co/9PgYrBP/20250522-090102.png",
   },
