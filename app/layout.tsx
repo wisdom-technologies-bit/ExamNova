@@ -34,12 +34,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
   <head>
-    <Script
-      src="https://quge5.com/88/tag.min.js"
-      data-zone="251309"
-      strategy="afterInteractive"
-    />
-  </head>
+  <script
+    src="https://quge5.com/88/tag.min.js"
+    data-zone="251309"
+    async
+    data-cfasync="false"
+  ></script>
+</head>
 
   <body className={`${inter.className} bg-background text-foreground`}>
         <HideV0Badge />
